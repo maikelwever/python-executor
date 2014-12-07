@@ -95,8 +95,9 @@ def execute(*command, **options):
         input = input.encode(encoding)
     stdout, stderr = shell.communicate(input=input)
     if options.get('check', True) and shell.returncode != 0:
-        raise ExternalCommandFailed(command, shell.returncode,
-                                    stdout=stdout.decode(encoding), stderr=stderr.decode(encoding))
+        stdout = stdout.decode(encoding) if stdout else None
+        stderr = stderr.decode(encoding) if stderr else None
+        raise ExternalCommandFailed(command, shell.returncode, stdout=stdout, stderr=stderr)
     if options.get('capture', False):
         stdout = stdout.decode(encoding)
         stripped = stdout.strip()
