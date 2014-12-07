@@ -37,10 +37,10 @@ Traceback (most recent call last):
     raise ExternalCommandFailed, msg % (shell.returncode, command)
 executor.ExternalCommandFailed: External command failed with exit code 1! (command: false)
 
-The exceptions raised by the ``execute()`` functions expose ``command`` and
-``returncode`` attributes. If you know a command is likely to exit with a
-nonzero status code and you want ``execute()`` to simply return a boolean you
-can do this:
+The exceptions raised by the ``execute()`` functions expose ``command``,
+``returncode``, ``stdout`` and ``stderr`` attributes. If you know a command is 
+likely to exit with a nonzero status code and you want ``execute()`` to simply 
+return a boolean you can do this:
 
 >>> execute('false', check=False)
 False

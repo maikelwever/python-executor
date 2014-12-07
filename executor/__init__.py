@@ -95,7 +95,8 @@ def execute(*command, **options):
         input = input.encode(encoding)
     stdout, stderr = shell.communicate(input=input)
     if options.get('check', True) and shell.returncode != 0:
-        raise ExternalCommandFailed(command, shell.returncode)
+        raise ExternalCommandFailed(command, shell.returncode,
+                                    stdout=stdout.decode(encoding), stderr=stderr.decode(encoding))
     if options.get('capture', False):
         stdout = stdout.decode(encoding)
         stripped = stdout.strip()
@@ -166,10 +167,14 @@ class ExternalCommandFailed(Exception):
 
     :ivar command: The command line that was executed (a string).
     :ivar returncode: The return code of the external command (an integer).
+    :ivar stdout: The standard output of the command if any, otherwise None.
+    :ivar stderr: The standard error of the command if any, otherwise None.
     """
 
-    def __init__(self, command, returncode):
+    def __init__(self, command, returncode, stdout=None, stderr=None):
         self.command = command
         self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
         error_message = "External command failed with exit code %s! (command: %s)"
         super(ExternalCommandFailed, self).__init__(error_message % (returncode, command))
